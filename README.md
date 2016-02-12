@@ -1,3 +1,6 @@
+Revised from Yinzo's smartQQBot
+
+Author: Yinzo
 SmartQQ-Bot Ver-0.2
 =========
 **注意:**此框架现已基本稳定，文档会尽快完善。
