@@ -72,7 +72,11 @@ class Group:
                 '5-5':'武大B隼鹰翔鹤骑脸~出门420制空','E1':'1BBV2cl3dd 出门选上路 多带反潜~','E2':'带路配置：霞 大淀 足柄 朝霜或者清霜 带路船有四艘 少一艘都不行 另外秋月级一艘和CAV，航巡带三式弹，dd可以带一个火箭弹 中间分歧选择上路，如果没有带路的话就秋月3bb2cv莽一波，或者下路四战：霞旗舰 bbv 2cav 1cv 1秋月级对空ci，建议带道中支援',
                 'E3':'先清运输条然后打血条，水上补给部队阵容：僵尸丸cav4dd + cl2ca秋月+另外两个dd。装备上僵尸丸双大发+指挥塔，航巡配二连，一队dd全部带桶。二队是作战装备。之后用普通水打就好 不ban雷巡~'
             },
-                '奖励':{'E1':'奖励一批战斗粮食 伊良湖 女神 和衣阿华主炮','E2':'初月还有勋章等等'
+                '奖励':{'E1':'奖励一批战斗粮食 伊良湖 女神 和衣阿华主炮','E2':'初月还有勋章等等','E3':'新的海外舰面条国ca zara 还有如果你是甲鱼就有甲章咯'
+            },
+                '掉落':{
+                '齐柏林':'在E3 L点 就是下路门神那里',
+                '欧根':'E3的两个boss都有掉落'
             },
                  '任务':{
                 #任务信息
@@ -203,6 +207,12 @@ class Group:
         return False
     '''
     def callout(self, msg):
+        #TODO: Revise the callout function from dict search based to weight based
+        #Using some numerical method to determine the right answer
+        #TODO: user specific answer, determined by id of group member
+        #TODO: specific nickname: 'taiju' 'zhanshen' 'shaoye'...
+      #  logging.info(str(QQ.get_friend_info(msg.send_uin)))
+
         if "呼叫翔鹤" in msg.content:
          #   logging.info(str(self.tid) + " calling me out, trying to reply....")
             self.reply("干嘛（‘·д·）")
