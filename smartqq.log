@@ -15928,3 +15928,22 @@ Fri, 12 Feb 2016 19:19:02  Group.py[line:130] INFO evaling repeat
 Fri, 12 Feb 2016 19:19:02  Group.py[line:130] INFO evaling callout
 Fri, 12 Feb 2016 19:19:02  Group.py[line:130] INFO evaling tucao
 Fri, 12 Feb 2016 19:19:02  MsgHandler.py[line:153] DEBUG queue handling.Now queue length:0
+Fri, 12 Feb 2016 19:19:18  QQLogin.py[line:256] DEBUG check_msg html:  {"result":[{"poll_type":"group_message","value":{"content":[["font",{"color":"000000","name":"微软雅黑","size":10,"style":[0,0,0]}],"我玩了一天示波器了"],"from_uin":2539496997,"group_code":2539496997,"msg_id":57648,"msg_type":0,"send_uin":827150334,"time":1455326347,"to_uin":2134405830}}],"retcode":0}
+
+Fri, 12 Feb 2016 19:19:18  QQLogin.py[line:383] INFO Requesting the account info by uin:    827150334
+Fri, 12 Feb 2016 19:19:28  QQLogin.py[line:393] DEBUG get_friend_info2 html:    {u'retcode': 100000}
+Fri, 12 Feb 2016 19:19:28  QQLogin.py[line:400] ERROR get_friend_info2
+Traceback (most recent call last):
+  File "C:\Kancolle\QQbot\QQLogin.py", line 395, in get_friend_info2
+    raise TypeError('get_friend_info2 result error')
+TypeError: get_friend_info2 result error
+Fri, 12 Feb 2016 19:19:28  QQLogin.py[line:340] INFO Requesting the account by uin:    827150334
+Fri, 12 Feb 2016 19:19:29  QQLogin.py[line:346] DEBUG uin_to_account html:    {u'retcode': 0, u'result': {u'account': 395851903, u'uin': 827150334, u'uiuin': u''}}
+Fri, 12 Feb 2016 19:19:29  MsgHandler.py[line:40] INFO [57648]【群用户(395851903)】:我玩了一天示波器了
+Fri, 12 Feb 2016 19:19:29  Group.py[line:125] INFO msg handling.
+Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling weather
+Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling ask
+Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling repeat
+Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling callout
+Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling tucao
+Fri, 12 Feb 2016 19:19:29  MsgHandler.py[line:153] DEBUG queue handling.Now queue length:0
