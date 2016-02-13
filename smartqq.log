@@ -15947,3 +15947,23 @@ Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling repeat
 Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling callout
 Fri, 12 Feb 2016 19:19:29  Group.py[line:130] INFO evaling tucao
 Fri, 12 Feb 2016 19:19:29  MsgHandler.py[line:153] DEBUG queue handling.Now queue length:0
+Fri, 12 Feb 2016 19:19:49  QQLogin.py[line:256] DEBUG check_msg html:  {"result":[{"poll_type":"group_message","value":{"content":[["font",{"color":"000000","name":"微软雅黑","size":10,"style":[0,0,0]}],"好玩么"],"from_uin":2539496997,"group_code":2539496997,"msg_id":17778,"msg_type":0,"send_uin":1307340523,"time":1455326369,"to_uin":2134405830}}],"retcode":0}
+
+Fri, 12 Feb 2016 19:19:49  MsgHandler.py[line:40] INFO [17778]【群用户(732378554)】:好玩么
+Fri, 12 Feb 2016 19:19:49  Group.py[line:125] INFO msg handling.
+Fri, 12 Feb 2016 19:19:49  Group.py[line:130] INFO evaling weather
+Fri, 12 Feb 2016 19:19:49  Group.py[line:130] INFO evaling ask
+Fri, 12 Feb 2016 19:19:49  Group.py[line:130] INFO evaling repeat
+Fri, 12 Feb 2016 19:19:49  Group.py[line:130] INFO evaling callout
+Fri, 12 Feb 2016 19:19:49  Group.py[line:130] INFO evaling tucao
+Fri, 12 Feb 2016 19:19:49  MsgHandler.py[line:153] DEBUG queue handling.Now queue length:0
+Fri, 12 Feb 2016 19:19:50  QQLogin.py[line:256] DEBUG check_msg html:  {"result":[{"poll_type":"group_message","value":{"content":[["font",{"color":"000000","name":"微软雅黑","size":10,"style":[0,0,0]}],"还阔以"],"from_uin":2539496997,"group_code":2539496997,"msg_id":57653,"msg_type":0,"send_uin":827150334,"time":1455326378,"to_uin":2134405830}}],"retcode":0}
+
+Fri, 12 Feb 2016 19:19:50  MsgHandler.py[line:40] INFO [57653]【群用户(395851903)】:还阔以
+Fri, 12 Feb 2016 19:19:50  Group.py[line:125] INFO msg handling.
+Fri, 12 Feb 2016 19:19:50  Group.py[line:130] INFO evaling weather
+Fri, 12 Feb 2016 19:19:50  Group.py[line:130] INFO evaling ask
+Fri, 12 Feb 2016 19:19:50  Group.py[line:130] INFO evaling repeat
+Fri, 12 Feb 2016 19:19:50  Group.py[line:130] INFO evaling callout
+Fri, 12 Feb 2016 19:19:50  Group.py[line:130] INFO evaling tucao
+Fri, 12 Feb 2016 19:19:50  MsgHandler.py[line:153] DEBUG queue handling.Now queue length:0
