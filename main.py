@@ -63,7 +63,7 @@ def handler(bot, message):
 				print(myqqbot.repCounter)
 			else:
 				if(myqqbot.repCounter > 6):
-					bot.SendTo(message.contact, '你们的复读坚持了' + str(myqqbot.repCounter) + '次~人类的本质就是个复读机！')
+					bot.SendTo(message.contact, '你们的复读坚持了' + str(myqqbot.repCounter + 1) + '次~人类的本质就是个复读机！')
 				myqqbot.repCounter = 0
 		if(myqqbot.repCounter == 3):
 			bot.SendTo(message.contact, message.content)
@@ -76,6 +76,9 @@ def handler(bot, message):
 	2.最新运营情报，舰娘官推，FGO活动公告
 	3.氪金信息
 	4.crawl for info, instead of hard coded csv
+	5.今日改修，今日修炼场，今日种火
+	6.定时提醒清本，上线清任务领奖励
+	7.带33节奏
 	'''
 
 
