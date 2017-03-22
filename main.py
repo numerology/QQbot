@@ -5,11 +5,20 @@ from qqbot import QQBot
 import csv
 import tweepy
 import datetime
+import os
+import json
+import urllib2
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 CONSUMER_KEY = 'uWb94m6mwDnHOix6YAfMQ1ESt'
 CONSUMER_SECRET = 'AHOrZYDUvskktLFIQRvXxnN7hDxtkaW8PZQsg1AatQfNGvbczQ'
 ACCESS_TOKEN = '1936186141-P1P8jBW8gwcLVMOW3kzeSOoF8GXvkyCPYvq4uB9'
 ACCESS_TOKEN_SECRET = 'aLyYUHTYXkS4VHdI8Wvf49ydOOWYjMldGrMeFSMukeWuU'
+TULINGKEY = "0a3727130d754c8d95797977f8f61646"
+TULINGURL = "http://www.tuling123.com/openapi/api?"
 TIME_ONEDAY = datetime.timedelta(1)
 
 class QQBotWithState(QQBot):
@@ -60,17 +69,29 @@ def handler(bot, message):
 			for tweet in public_tweets:
 				if(time_now - tweet.created_at < TIME_ONEDAY):
 					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
-
+		'''
+		content = {'userid':'123456', 'info':message.content, 'key':TULINGKEY}
+        data = json.dumps(content)
+        req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
+        re = urllib2.urlopen(req)
+        re = re.read()
+        re_dict = json.loads(re)
+        text = re_dict['text']
+        bot.SendTo(message.contact, str(text.encode('utf-8', 'ignore')))
+		'''
 	#in group chat
 	#Keyword search
 	if (message.contact.qq == '337545621' and ('@正规空母翔鹤' in message.content)): #info mode
 		#check the info list
+		flag = True
 		for key, value in myqqbot.responses.iteritems():
 			if key in message.content:
+				flag = False
 				bot.SendTo(message.contact, value)
 				break
 
 		if('FGO' in message.content and '情报' in message.content):
+			flag = False
 			time_now = datetime.datetime.now()
 			public_tweets = bot.api.user_timeline('fgoproject')
 			for tweet in public_tweets:
@@ -78,11 +99,26 @@ def handler(bot, message):
 					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
 
 		if('舰' in message.content and '情报' in message.content):
+			flag = False
 			time_now = datetime.datetime.now()
 			public_tweets = bot.api.user_timeline('KanColle_STAFF')
 			for tweet in public_tweets:
 				if(time_now - tweet.created_at < TIME_ONEDAY):
 					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
+
+		#if no keywords matched, turn to tuling123 api
+		#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
+		if(flag):
+			content = {'userid':message.memberUin, 'info':message.content, 'key':TULINGKEY}
+	        data = json.dumps(content)
+	        req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
+	        re = urllib2.urlopen(req)
+	        re = re.read()
+	        re_dict = json.loads(re)
+	        category = re_dict['code']
+	        if()
+	        text = re_dict['text']
+	        bot.SendTo(message.contact, str(text.encode('utf-8', 'ignore')))
 
 
 	else:
@@ -108,7 +144,7 @@ def handler(bot, message):
 	'''
 	TODO：
 	1.点歌，发url
-	2.最新运营情报，舰娘官推，FGO活动公告
+	
 	3.氪金信息
 	4.crawl for info, instead of hard coded csv
 	5.今日改修，今日修炼场，今日种火
