@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Nilk'
 
-from qqbot import QQBot
+from qqbot import QQBot, RunBot
 import csv
 import tweepy
 import datetime
@@ -21,25 +21,128 @@ TULINGKEY = "0a3727130d754c8d95797977f8f61646"
 TULINGURL = "http://www.tuling123.com/openapi/api?"
 TIME_ONEDAY = datetime.timedelta(1)
 
+with open('responses.csv', mode = 'r') as infile:
+	reader = csv.reader(infile)
+	responses = {rows[0]:rows[1] for rows in reader}
+
+
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+api = tweepy.API(auth)
+
 class QQBotWithState(QQBot):
-	def __init__(self, qq=None, user=None, conf=None, ai=None):
-		QQBot.__init__(self, qq, user, conf, ai)
-		with open('responses.csv', mode = 'r') as infile:
-			reader = csv.reader(infile)
-			self.responses = {rows[0]:rows[1] for rows in reader}
+	def __init__(self):
 		self.repCounter = 0
 		self.prevMsg = ''
 
-		self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-		self.auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+	def onQQMessage(self, contact, member, content):
+		if (contact.qq == '1259276249'):
+			content = {'userid':'123456', 'info':content, 'key':TULINGKEY}
+			data = json.dumps(content)
+			req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
+			re = urllib2.urlopen(req)
+			re = re.read()
+			re_dict = json.loads(re)
+			text = re_dict['text']
+			self.SendTo(contact, str(text.encode('utf-8', 'ignore')))
+			if (content == '-stop'):
+				self.SendTo(contact, 'QQ Bot terminated')
+				self.Stop()
 
-		self.api = tweepy.API(self.auth)
+			
+			if('@正规空母翔鹤' in content):
+				for key, value in responses.iteritems():
+					print(key)
+					if key in content:
+						self.SendTo(contact, value)
+						break
+
+			if('抓取官推' in content):
+				time_now = datetime.datetime.now()
+				public_tweets = api.user_timeline('fgoproject')
+				for tweet in public_tweets:
+					if(time_now - tweet.created_at < TIME_ONEDAY):
+						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
+			
+			
+	            	
+		if (contact.qq == '337545621' and '@ME' in content): #info mode
+			#check the info list
+			print(str(content[8:-1]))
+			
+			for key, value in responses.iteritems():
+				if key in content:
+					self.SendTo(contact, value)
+					return
+
+
+			if('FGO' in content and '情报' in content):
+				time_now = datetime.datetime.now()
+				public_tweets = api.user_timeline('fgoproject')
+				for tweet in public_tweets:
+					if(time_now - tweet.created_at < TIME_ONEDAY):
+						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
+				return
+
+
+			if('舰' in content and '情报' in content):
+				time_now = datetime.datetime.now()
+				public_tweets = api.user_timeline('KanColle_STAFF')
+				for tweet in public_tweets:
+					if(time_now - tweet.created_at < TIME_ONEDAY):
+						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
+				return
+			
+
+			#if no keywords matched, turn to tuling123 api
+			#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
+			content = {'userid':member.uin, 'info':content, 'key':TULINGKEY}
+			data = json.dumps(content)
+			req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
+			re = urllib2.urlopen(req)
+			re = re.read()
+			re_dict = json.loads(re)
+			category = re_dict['code']
+			print(category)
+			if(category == 100000):
+				text = re_dict['text']
+				self.SendTo(contact, str(text.encode('utf-8')))
+			elif(category == 200000):
+				text = re_dict['text']
+				self.SendTo(contact, str(text.encode('utf-8')))
+				link = re_dict['url']
+				self.SendTo(contact, str(link.encode('utf-8')))
+			
+		else:
+			
+			#trolling in chat
+			#1. 复读
+			# repeatition should be such that, once it has participated in a row, it should not say anything anymore
+			
+			curMsg = content
+			if(self.repCounter == 0):
+				self.repCounter += 1
+			else:
+				if(curMsg == self.prevMsg):
+					self.repCounter += 1
+					print(self.repCounter)
+				else:
+					if(self.repCounter > 3):
+						self.SendTo(contact, '你们的复读坚持了' + str(self.repCounter + 1) + '次~人类的本质就是个复读机！')
+					self.repCounter = 0
+			if(self.repCounter == 3):
+				self.SendTo(contact, content)
+
+			self.prevMsg = curMsg
+			
+		
 
 #open the info table
 
 
 
-myqqbot = QQBotWithState(qq = '3407757156')
+RunBot(QQBotWithState, qq='3407757156', user=None)
 
 '''
 Goal:
@@ -47,107 +150,10 @@ Goal:
 2. Can troll in the group chat
 3. When called out by @, provide proper info
 '''
-@myqqbot.On('qqmessage')
-def handler(bot, message):
-	#editing
-	if (message.contact.qq == '1259276249'):
-		bot.SendTo(message.contact, 'copy that')
-		if (message.content == '-stop'):
-			bot.SendTo(message.contact, 'QQ Bot terminated')
-			bot.Stop()
 
-		if('@正规空母翔鹤' in message.content):
-			for key, value in myqqbot.responses.iteritems():
-				print(key)
-				if key in message.content:
-					bot.SendTo(message.contact, value)
-					break
-
-		if('抓取官推' in message.content):
-			time_now = datetime.datetime.now()
-			public_tweets = bot.api.user_timeline('fgoproject')
-			for tweet in public_tweets:
-				if(time_now - tweet.created_at < TIME_ONEDAY):
-					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
-		'''
-		content = {'userid':'123456', 'info':message.content, 'key':TULINGKEY}
-        data = json.dumps(content)
-        req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
-        re = urllib2.urlopen(req)
-        re = re.read()
-        re_dict = json.loads(re)
-        text = re_dict['text']
-        bot.SendTo(message.contact, str(text.encode('utf-8', 'ignore')))
-		'''
-	#in group chat
-	#Keyword search
-	if (message.contact.qq == '337545621' and ('@正规空母翔鹤' in message.content)): #info mode
-		#check the info list
-		flag = True
-		for key, value in myqqbot.responses.iteritems():
-			if key in message.content:
-				flag = False
-				bot.SendTo(message.contact, value)
-				return
-
-
-		if('FGO' in message.content and '情报' in message.content):
-			flag = False
-			time_now = datetime.datetime.now()
-			public_tweets = bot.api.user_timeline('fgoproject')
-			for tweet in public_tweets:
-				if(time_now - tweet.created_at < TIME_ONEDAY):
-					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
-			return
-
-
-		if('舰' in message.content and '情报' in message.content):
-			flag = False
-			time_now = datetime.datetime.now()
-			public_tweets = bot.api.user_timeline('KanColle_STAFF')
-			for tweet in public_tweets:
-				if(time_now - tweet.created_at < TIME_ONEDAY):
-					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
-			return
-
-
-		#if no keywords matched, turn to tuling123 api
-		#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
-		if(flag == True):
-			content = {'userid':message.memberUin, 'info':message.content, 'key':TULINGKEY}
-	        data = json.dumps(content)
-	        req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
-	        re = urllib2.urlopen(req)
-	        re = re.read()
-	        re_dict = json.loads(re)
-	        category = re_dict['code']
-	        text = re_dict['text']
-	        bot.SendTo(message.contact, str(text.encode('utf-8', 'ignore')))
-	        return
-
-
-	else:
-		#trolling in chat
-		#1. 复读
-		# repeatition should be such that, once it has participated in a row, it should not say anything anymore
-		curMsg = message.content
-		if(myqqbot.repCounter == 0):
-			myqqbot.repCounter += 1
-		else:
-			if(curMsg == myqqbot.prevMsg):
-				myqqbot.repCounter += 1
-				print(myqqbot.repCounter)
-			else:
-				if(myqqbot.repCounter > 3):
-					bot.SendTo(message.contact, '你们的复读坚持了' + str(myqqbot.repCounter + 1) + '次~人类的本质就是个复读机！')
-				myqqbot.repCounter = 0
-		if(myqqbot.repCounter == 3):
-			bot.SendTo(message.contact, message.content)
-
-		myqqbot.prevMsg = curMsg
-
-	'''
+'''
 	TODO：
+	0. try to trim the @me before msg in group chat
 	1.点歌，发url
 	
 	3.氪金信息
@@ -157,11 +163,11 @@ def handler(bot, message):
 	7.带33节奏
 
 	舰娘信息可以用kcwiki api
-	'''
+'''
 
 
 
-myqqbot.LoginAndRun()
+#myqqbot.LoginAndRun()
 
 
 
