@@ -88,7 +88,8 @@ def handler(bot, message):
 			if key in message.content:
 				flag = False
 				bot.SendTo(message.contact, value)
-				break
+				return
+
 
 		if('FGO' in message.content and '情报' in message.content):
 			flag = False
@@ -97,6 +98,8 @@ def handler(bot, message):
 			for tweet in public_tweets:
 				if(time_now - tweet.created_at < TIME_ONEDAY):
 					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
+			return
+
 
 		if('舰' in message.content and '情报' in message.content):
 			flag = False
@@ -105,10 +108,12 @@ def handler(bot, message):
 			for tweet in public_tweets:
 				if(time_now - tweet.created_at < TIME_ONEDAY):
 					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
+			return
+
 
 		#if no keywords matched, turn to tuling123 api
 		#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
-		if(flag):
+		if(flag == True):
 			content = {'userid':message.memberUin, 'info':message.content, 'key':TULINGKEY}
 	        data = json.dumps(content)
 	        req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
@@ -116,9 +121,9 @@ def handler(bot, message):
 	        re = re.read()
 	        re_dict = json.loads(re)
 	        category = re_dict['code']
-	        if()
 	        text = re_dict['text']
 	        bot.SendTo(message.contact, str(text.encode('utf-8', 'ignore')))
+	        return
 
 
 	else:
