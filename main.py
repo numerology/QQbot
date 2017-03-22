@@ -3,6 +3,14 @@ __author__ = 'Nilk'
 
 from qqbot import QQBot
 import csv
+import tweepy
+import datetime
+
+CONSUMER_KEY = 'uWb94m6mwDnHOix6YAfMQ1ESt'
+CONSUMER_SECRET = 'AHOrZYDUvskktLFIQRvXxnN7hDxtkaW8PZQsg1AatQfNGvbczQ'
+ACCESS_TOKEN = '1936186141-P1P8jBW8gwcLVMOW3kzeSOoF8GXvkyCPYvq4uB9'
+ACCESS_TOKEN_SECRET = 'aLyYUHTYXkS4VHdI8Wvf49ydOOWYjMldGrMeFSMukeWuU'
+TIME_ONEDAY = datetime.timedelta(1)
 
 class QQBotWithState(QQBot):
 	def __init__(self, qq=None, user=None, conf=None, ai=None):
@@ -12,6 +20,11 @@ class QQBotWithState(QQBot):
 			self.responses = {rows[0]:rows[1] for rows in reader}
 		self.repCounter = 0
 		self.prevMsg = ''
+
+		self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+		self.auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+		self.api = tweepy.API(self.auth)
 
 #open the info table
 
@@ -41,6 +54,13 @@ def handler(bot, message):
 					bot.SendTo(message.contact, value)
 					break
 
+		if('抓取官推' in message.content):
+			time_now = datetime.datetime.now()
+			public_tweets = bot.api.user_timeline('fgoproject')
+			for tweet in public_tweets:
+				if(time_now - tweet.created_at < TIME_ONEDAY):
+					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
+
 	#in group chat
 	#Keyword search
 	if (message.contact.qq == '337545621' and ('@正规空母翔鹤' in message.content)): #info mode
@@ -49,6 +69,21 @@ def handler(bot, message):
 			if key in message.content:
 				bot.SendTo(message.contact, value)
 				break
+
+		if('FGO' in message.content and '情报' in message.content):
+			time_now = datetime.datetime.now()
+			public_tweets = bot.api.user_timeline('fgoproject')
+			for tweet in public_tweets:
+				if(time_now - tweet.created_at < TIME_ONEDAY):
+					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
+
+		if('舰' in message.content and '情报' in message.content):
+			time_now = datetime.datetime.now()
+			public_tweets = bot.api.user_timeline('KanColle_STAFF')
+			for tweet in public_tweets:
+				if(time_now - tweet.created_at < TIME_ONEDAY):
+					bot.SendTo(message.contact, str(tweet.text.encode('utf-8', 'ignore')))
+
 
 	else:
 		#trolling in chat
@@ -62,7 +97,7 @@ def handler(bot, message):
 				myqqbot.repCounter += 1
 				print(myqqbot.repCounter)
 			else:
-				if(myqqbot.repCounter > 6):
+				if(myqqbot.repCounter > 3):
 					bot.SendTo(message.contact, '你们的复读坚持了' + str(myqqbot.repCounter + 1) + '次~人类的本质就是个复读机！')
 				myqqbot.repCounter = 0
 		if(myqqbot.repCounter == 3):
@@ -79,6 +114,8 @@ def handler(bot, message):
 	5.今日改修，今日修炼场，今日种火
 	6.定时提醒清本，上线清任务领奖励
 	7.带33节奏
+
+	舰娘信息可以用kcwiki api
 	'''
 
 
