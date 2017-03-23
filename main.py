@@ -164,10 +164,11 @@ class QQBotWithState(QQBot):
 			self.prevMsg = curMsg
 
 	def onInterval(self):
+		
+		test_group = self.List('group', '337545621')[0]
+		#	self.SendTo(test_group, 'interval method evoked')
 		#execute per 5mins
 		#sending debug info
-		test_group = self.List('group', '337545621')[0]
-	#	self.SendTo(test_group, 'interval method evoked')
 		
 		time_now = datetime.datetime.time(datetime.datetime.now())
 		if(time_now >= datetime.time(0,50,0,0) and time_now < datetime.time(0,55,0,0)):
@@ -201,6 +202,16 @@ class QQBotWithState(QQBot):
 		#2pm, FGO login award
 		#3pm, kancolle quest update
 
+	def onNewContact(self, contact, owner):
+		#exec when there is new member joining owner
+		print('onNewContact evoked')
+		if(owner is None): return
+		if(owner.qq == '337545621'):
+			test_group = self.List('group', '209127315')[0]
+			new_member = self.List(test_group, 'qq='+str(contact.qq))[0]
+			self.SendTo(owner, '欢迎新dalao~'.encode('utf-8'))
+			self.SendTo(owner, 'Hello '.encode('utf-8')+ contact.card.encode('utf-8')+'. 我是翔鹤，有什么问题可以at我，如果对于我的功能有什么建议的话请找nilk.'
+				.encode('utf-8'))
 
 #open the info table
 
@@ -228,10 +239,6 @@ Goal:
 
 	舰娘信息可以用kcwiki api
 '''
-
-
-
-#myqqbot.LoginAndRun()
 
 
 
