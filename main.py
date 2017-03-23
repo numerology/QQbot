@@ -64,8 +64,7 @@ class QQBotWithState(QQBot):
 				for tweet in public_tweets:
 					if(time_now - tweet.created_at < TIME_ONEDAY):
 						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
-			
-			
+
 	    #testgroup '209127315' target 337545621
 		if (contact.qq == '337545621' and '@ME' in content): #info mode
 			#check the info list
@@ -92,6 +91,10 @@ class QQBotWithState(QQBot):
 					if(time_now - tweet.created_at < TIME_ONEDAY):
 						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
 				return
+
+			#氪金信息
+			if('充值' in content or '氪金' in content):
+				print('check for current price')
 			
 
 			#if no keywords matched, turn to tuling123 api
@@ -159,8 +162,45 @@ class QQBotWithState(QQBot):
 				self.SendTo(contact, content)
 
 			self.prevMsg = curMsg
-			
+
+	def onInterval(self):
+		#execute per 5mins
+		#sending debug info
+		test_group = self.List('group', '337545621')[0]
+	#	self.SendTo(test_group, 'interval method evoked')
 		
+		time_now = datetime.datetime.time(datetime.datetime.now())
+		if(time_now >= datetime.time(0,50,0,0) and time_now < datetime.time(0,55,0,0)):
+			self.SendTo(test_group, 'Kancolle 演习马上更新， 请各位提督不要忘记演习~'.encode('utf-8'))
+		if(time_now >= datetime.time(12,50,0,0) and time_now < datetime.time(12,55,0,0)):
+			self.SendTo(test_group, 'Kancolle 演习马上更新， 请各位提督不要忘记演习~'.encode('utf-8'))
+
+		if(time_now >= datetime.time(6,50,0,0) and time_now < datetime.time(6,55,0,0)):
+			public_tweets = api.user_timeline('fgoproject')
+			for tweet in public_tweets:
+				if(datetime.datetime.now() - tweet.created_at < TIME_ONEDAY):
+					self.SendTo(test_group, str(tweet.text.encode('utf-8', 'ignore')))
+			public_tweets = api.user_timeline('KanColle_STAFF')
+			for tweet in public_tweets:
+				if(time_now - tweet.created_at < TIME_ONEDAY):
+					self.SendTo(test_group, str(tweet.text.encode('utf-8', 'ignore')))
+
+		if(time_now >= datetime.time(10,0,0,0) and time_now < datetime.time(10,5,0,0)):
+			self.SendTo(test_group, 'FGO日常任务已经免费友情点十连已经更新~'.encode('utf-8'))
+
+		if(time_now >= datetime.time(14,0,0,0) and time_now < datetime.time(14,5,0,0)):
+			self.SendTo(test_group, 'FGO日常登录奖励大家不要错过哦~'.encode('utf-8'))
+
+		if(time_now >= datetime.time(15,0,0,0) and time_now < datetime.time(15,5,0,0)):
+			self.SendTo(test_group, 'Kancolle每日任务已经更新~'.encode('utf-8'))
+		#some time point,
+		#1am, kancolle drill
+		#6am, check latest info
+		#10am, FGO free summoning, daily quest update
+		#1pm, kancolle drill
+		#2pm, FGO login award
+		#3pm, kancolle quest update
+
 
 #open the info table
 
@@ -183,7 +223,7 @@ Goal:
 	3.氪金信息
 	4.crawl for info, instead of hard coded csv
 	5.今日改修，今日修炼场，今日种火
-	6.定时提醒清本，上线清任务领奖励
+	6.定时提醒清本，上线清任务领奖励（done）
 	7.带33节奏
 
 	舰娘信息可以用kcwiki api
