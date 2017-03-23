@@ -69,7 +69,6 @@ class QQBotWithState(QQBot):
 	            	
 		if (contact.qq == '337545621' and '@ME' in content): #info mode
 			#check the info list
-			print(str(content[8:-1]))
 			
 			for key, value in responses.iteritems():
 				if key in content:
@@ -97,7 +96,9 @@ class QQBotWithState(QQBot):
 
 			#if no keywords matched, turn to tuling123 api
 			#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
-			content = {'userid':member.uin, 'info':content, 'key':TULINGKEY}
+			pure_content = content.decode('utf8')[6:].encode('utf8')
+			print('pure_content = ' + pure_content.encode('gb2312'))
+			content = {'userid':member.uin, 'info':pure_content, 'key':TULINGKEY}
 			data = json.dumps(content)
 			req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
 			re = urllib2.urlopen(req)
@@ -153,7 +154,7 @@ Goal:
 
 '''
 	TODO：
-	0. try to trim the @me before msg in group chat
+	0. try to trim the @me before msg in group chat(done)
 	1.点歌，发url
 	
 	3.氪金信息
