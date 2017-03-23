@@ -66,7 +66,7 @@ class QQBotWithState(QQBot):
 						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
 			
 			
-	            	
+	    #testgroup '209127315' target 337545621
 		if (contact.qq == '337545621' and '@ME' in content): #info mode
 			#check the info list
 			
@@ -114,7 +114,30 @@ class QQBotWithState(QQBot):
 				self.SendTo(contact, str(text.encode('utf-8')))
 				link = re_dict['url']
 				self.SendTo(contact, str(link.encode('utf-8')))
-			
+			elif(category == 308000): #the return type is a list
+				text = re_dict['text']
+				self.SendTo(contact, str(text.encode('utf-8')))
+				return_list = re_dict['list']
+				print(len(return_list))
+				counter = 0
+				for item in return_list:
+					self.SendTo(contact, item['name'].encode('utf-8') + '用料: '.encode('utf-8')
+						+ item['info'].encode('utf-8') + ' 详细做法: '.encode('utf-8') + item['detailurl'].encode('utf-8'))
+					counter+=1
+					if(counter > 4):
+						break
+			elif(category == 302000):
+				text = re_dict['text']
+				self.SendTo(contact, str(text.encode('utf-8')))
+				return_list = re_dict['list']
+				print(len(return_list))
+				counter = 0
+				for item in return_list:
+					self.SendTo(contact, item['article'].encode('utf-8') + ' 消息来自: '.encode('utf-8')
+						+ item['source'].encode('utf-8') + ' 详情请见: '.encode('utf-8') + item['detailurl'].encode('utf-8'))
+					counter+=1
+					if(counter > 4):
+						break
 		else:
 			
 			#trolling in chat
