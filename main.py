@@ -23,6 +23,8 @@ TULINGKEY = "0a3727130d754c8d95797977f8f61646"
 TULINGURL = "http://www.tuling123.com/openapi/api?"
 TIME_ONEDAY = datetime.timedelta(1)
 
+GROUP_NUMBER = '337545621'
+
 with open('responses.csv', mode = 'r') as infile:
 	reader = csv.reader(infile)
 	responses = {rows[0]:rows[1] for rows in reader}
@@ -68,7 +70,7 @@ class QQBotWithState(QQBot):
 						self.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
 
 	    #testgroup '209127315' target 337545621
-		if (contact.qq == '337545621' and '@ME' in content): #info mode
+		if (contact.qq == GROUP_NUMBER and '@ME' in content): #info mode
 			#check the info list
 			
 			for key, value in responses.iteritems():
@@ -136,7 +138,10 @@ class QQBotWithState(QQBot):
 			#氪金信息
 			if('充值' in content or '氪金' in content):
 				print('check for current price')
-			
+				self.SendTo(contact, 'FGO黑卡充值：'.encode('utf-8') + 'https://item.taobao.com/item.htm?spm=0.0.0.0.nBUIej&id=546772277736')
+				self.SendTo(contact, 'FGO白卡充值：'.encode('utf-8') + 'https://item.taobao.com/item.htm?spm=a1z0k.7628870.0.0.kayXcs&id=545942439642&_u=p2o03db0b500')
+				self.SendTo(contact, '舰娘氪金：'.encode('utf-8') + 'https://item.taobao.com/item.htm?spm=a1z10.5-c.w4002-15864276650.23.yejdE6&id=539141881167')
+				return
 
 			#if no keywords matched, turn to tuling123 api
 			#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
