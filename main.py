@@ -9,6 +9,8 @@ import os
 import json
 import urllib2
 import sys
+import re as regex
+from bs4 import BeautifulSoup as BS
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -73,6 +75,45 @@ class QQBotWithState(QQBot):
 				if key in content:
 					self.SendTo(contact, value)
 					return
+
+			if('攻略' in content or '配置' in content or '带路' in content):
+				#turn to kcwiki pages
+				area = ''
+				if('1-' in content):
+					area = '镇守府海域'
+				if('2-' in content):
+					area = '南西群岛海域'
+				if('3-' in content):
+					area = '北方海域'
+				if('4-' in content):
+					area = '西方海域'
+				if('5-' in content):
+					area = '南方海域'
+				if('6-' in content):
+					area = '中部海域'
+
+				pattern = regex.compile(r'\d-\d')
+				subarea = regex.search(pattern, content).group()
+				print(subarea)
+
+				html_content = urllib2.urlopen('https://zh.kcwiki.moe/wiki/' + area + '/' + subarea).read()
+				soup = BS(html_content)
+				print(soup.title)
+				flag = False
+
+				pattern = regex.compile(r'</?\w+[^>]*>|<br\s*?/?>|\n+')
+
+				for item in soup.find_all('div'):
+					if(flag and item.ul is not None):
+						for entry in item.ul:
+							self.SendTo(contact, str(pattern.sub('',str(entry))).encode('utf-8'))
+						break
+
+					if(item.b is not None and '海域情报' in str(item.b)):
+						print(item.get('class'))
+						flag = True
+				return
+
 
 
 			if('FGO' in content and '情报' in content):
@@ -232,7 +273,7 @@ Goal:
 	1.点歌，发url
 	
 	3.氪金信息
-	4.crawl for info, instead of hard coded csv
+	4.crawl for info, instead of hard coded csv(done)
 	5.今日改修，今日修炼场，今日种火
 	6.定时提醒清本，上线清任务领奖励（done）
 	7.带33节奏
