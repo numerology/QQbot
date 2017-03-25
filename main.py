@@ -252,8 +252,8 @@ class QQBotWithState(QQBot):
 		#exec when there is new member joining owner
 		print('onNewContact evoked')
 		if(owner is None): return
-		if(owner.qq == '337545621'):
-			test_group = self.List('group', '209127315')[0]
+		if(owner.qq == GROUP_NUMBER):
+			test_group = self.List('group', GROUP_NUMBER)[0]
 			new_member = self.List(test_group, 'qq='+str(contact.qq))[0]
 			self.SendTo(owner, '欢迎新dalao~'.encode('utf-8'))
 			self.SendTo(owner, 'Hello '.encode('utf-8')+ contact.card.encode('utf-8')+'. 我是翔鹤，有什么问题可以at我，如果对于我的功能有什么建议的话请找nilk.'
