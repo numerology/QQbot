@@ -82,23 +82,23 @@ class QQBotWithState(QQBot):
 				#turn to kcwiki pages
 				area = ''
 				if('1-' in content):
-					area = '镇守府海域'
+					area = urllib2.quote('镇守府海域')
 				if('2-' in content):
-					area = '南西群岛海域'
+					area = urllib2.quote('南西群岛海域')
 				if('3-' in content):
-					area = '北方海域'
+					area = urllib2.quote('北方海域')
 				if('4-' in content):
-					area = '西方海域'
+					area = urllib2.quote('西方海域')
 				if('5-' in content):
-					area = '南方海域'
+					area = urllib2.quote('南方海域')
 				if('6-' in content):
-					area = '中部海域'
+					area = urllib2.quote('中部海域')
 
 				pattern = regex.compile(r'\d-\d')
 				subarea = regex.search(pattern, content).group()
 				print(subarea)
 
-				html_content = urllib2.urlopen('https://zh.kcwiki.moe/wiki/' + area + '/' + subarea).read()
+				html_content = urllib2.urlopen('https://zh.kcwiki.org/wiki/' + area + '/' + subarea).read()
 				soup = BS(html_content)
 				print(soup.title)
 				flag = False
@@ -263,7 +263,7 @@ class QQBotWithState(QQBot):
 
 
 
-RunBot(QQBotWithState, qq='3407757156', user=None)
+RunBot(QQBotWithState, qq='3407757156', user = 'Nilk')
 
 '''
 Goal:
