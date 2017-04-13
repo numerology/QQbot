@@ -1,0 +1,7 @@
+Note:
+
+If want to host the qqbot server in cloud, or virtual host, use the following procedures:
+1. chmod +x main.py
+2. nohup python /path/to/main.py &
+
+Then quit the local machine's session, the thread will be still running in cloud.
