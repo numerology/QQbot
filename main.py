@@ -13,7 +13,7 @@ import re as regex
 from bs4 import BeautifulSoup as BS
 
 reload(sys)
-sys.setdefaultencoding('utf8')
+sys.setdefaultencoding('utf-8')
 
 CONSUMER_KEY = 'uWb94m6mwDnHOix6YAfMQ1ESt'
 CONSUMER_SECRET = 'AHOrZYDUvskktLFIQRvXxnN7hDxtkaW8PZQsg1AatQfNGvbczQ'
@@ -86,7 +86,7 @@ class QQBotWithState(QQBot):
 				if('2-' in content):
 					area = '南西群岛海域'
 				if('3-' in content):
-					area = '北方海域'
+					area = urllib2.quote('北方海域')
 				if('4-' in content):
 					area = '西方海域'
 				if('5-' in content):
@@ -138,7 +138,7 @@ class QQBotWithState(QQBot):
 			#氪金信息
 			if('充值' in content or '氪金' in content):
 				print('check for current price')
-				self.SendTo(contact, 'FGO黑卡充值：'.encode('utf-8') + 'https://item.taobao.com/item.htm?spm=0.0.0.0.nBUIej&id=546772277736')
+				self.SendTo(contact, 'FGO黑卡充值：https://item.taobao.com/item.htm?spm=0.0.0.0.nBUIej&id=546772277736'.encode('utf-8'))
 				self.SendTo(contact, 'FGO白卡充值：'.encode('utf-8') + 'https://item.taobao.com/item.htm?spm=a1z0k.7628870.0.0.kayXcs&id=545942439642&_u=p2o03db0b500')
 				self.SendTo(contact, '舰娘氪金：'.encode('utf-8') + 'https://item.taobao.com/item.htm?spm=a1z10.5-c.w4002-15864276650.23.yejdE6&id=539141881167')
 				return
