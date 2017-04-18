@@ -24,6 +24,8 @@ TULINGKEY = "0a3727130d754c8d95797977f8f61646"
 TULINGURL = "http://www.tuling123.com/openapi/api?"
 TIME_ONEDAY = datetime.timedelta(1)
 
+KCWIKI_DATA = "http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json"
+
 GROUP_NUMBER = '337545621'
 
 with open('responses.csv', mode = 'r') as infile:
@@ -153,6 +155,26 @@ def onQQMessage(bot, contact, member, content):
 
 		#if no keywords matched, turn to tuling123 api
 		#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
+		if('改修' in content):
+			print('checking for akashi factory list')
+			req = urllib2.Request(KCWIKI_DATA)
+			re = urllib2.urlopen(req)
+			re = re.read()
+			equip_list = json.loads(re)
+			today_week = datetime.datetime.now() + datetime.timedelta(hours = 14)
+			today_week = today_week.weekday()
+
+			for equip in equip_list:
+				current_requirement = equip[u'improvement'][0]
+				days = current_requirement[u'req'][0][u'day']
+				if(days[today_week]):
+					# current item can be improved today
+					info = equip[u'name'] + ' 秘书舰: '.encode('utf-8')
+					secretary_list = current_requirement[u'req'][0][u'secretary']
+					
+
+
+
 		pure_content = content.decode('utf8')[6:].encode('utf8')
 		print('pure_content = ' + pure_content.encode('gb2312'))
 		content = {'userid':member.uin, 'info':pure_content, 'key':TULINGKEY}
@@ -276,7 +298,7 @@ def onNewContact(bot, contact, owner):
 
 
 
-RunBot(qq='3407757156', user = 'Nilk')
+RunBot(qq='3407757156', user = None)
 
 '''
 Goal:
