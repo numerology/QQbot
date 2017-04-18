@@ -162,16 +162,29 @@ def onQQMessage(bot, contact, member, content):
 			re = re.read()
 			equip_list = json.loads(re)
 			today_week = datetime.datetime.now() + datetime.timedelta(hours = 14)
-			today_week = today_week.weekday()
+			today_week = (today_week.weekday() + 1) % 7
 
 			for equip in equip_list:
-				current_requirement = equip[u'improvement'][0]
-				days = current_requirement[u'req'][0][u'day']
-				if(days[today_week]):
-					# current item can be improved today
-					info = equip[u'name'] + ' 秘书舰: '.encode('utf-8')
-					secretary_list = current_requirement[u'req'][0][u'secretary']
-					
+				list_of_secretary = []
+				improvements = equip[u'improvement']
+				#note: one equip can have different combination of secretary and weekdays,
+				#also different improvement paths
+				for current_improvement in improvements:
+					current_requirements = current_improvement[u'req']
+					for requirement in current_requirements:
+						days = requirement[u'day']
+						if(days[today_week]):
+							#add secretaries to the list
+							list_of_secretary.extend(requirement[u'secretary'])
+
+				if(len(list_of_secretary) > 0):
+					info = '装备名称： '.encode('utf-8') + equip['name'] + ' 秘书舰： '.encode('utf-8')
+					for secretary in list_of_secretary:
+						info = info + secretary + ' '
+
+					bot.SendTo(contact, info)
+			
+			return
 
 
 
