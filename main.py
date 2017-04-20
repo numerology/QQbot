@@ -11,6 +11,7 @@ import urllib2
 import sys
 import re as regex
 import time
+import logging
 from bs4 import BeautifulSoup as BS
 
 reload(sys)
@@ -40,11 +41,22 @@ api = tweepy.API(auth)
 repCounter = 0
 prevMsg = ''
 
+logger = logging.getLogger('shoukaku')
+hdlr = logging.FileHandler('shoukaku.log')
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr) 
+logger.setLevel(logging.INFO)
+
 
 
 @qqbotslot
 def onQQMessage(bot, contact, member, content):
 	global api
+	global logger
+
+	logger.info(content)
+
 	if (contact.qq == '1259276249'):
 		content = {'userid':'123456', 'info':content, 'key':TULINGKEY}
 		data = json.dumps(content)
