@@ -56,19 +56,24 @@ def onQQMessage(bot, contact, member, content):
 	global logger
 
 	logger.info(content)
+	print(contact.qq)
 
 	if (contact.qq == '1259276249'):
-		content = {'userid':'123456', 'info':content, 'key':TULINGKEY}
-		data = json.dumps(content)
-		req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
-		re = urllib2.urlopen(req)
-		re = re.read()
-		re_dict = json.loads(re)
-		text = re_dict['text']
-		bot.SendTo(contact, str(text.encode('utf-8', 'ignore')))
+		# content = {'userid':'123456', 'info':content, 'key':TULINGKEY}
+		# data = json.dumps(content)
+		# req = urllib2.Request(TULINGURL, data, {'Content-Type': 'application'})
+		# re = urllib2.urlopen(req)
+		# re = re.read()
+		# re_dict = json.loads(re)
+		# text = re_dict['text']
+		# bot.SendTo(contact, str(text.encode('utf-8', 'ignore')))
 		if (content == '-stop'):
 			bot.SendTo(contact, 'QQ Bot terminated')
 			bot.Stop()
+
+		if (content == '-log output'):
+			log_file = open('shoukaku.log')
+			bot.SendTo(contact, log_file.read())
 
 		
 		if('@正规空母翔鹤' in content):
@@ -78,6 +83,7 @@ def onQQMessage(bot, contact, member, content):
 
 					bot.SendTo(contact, value)
 					break
+			return
 
 		if('抓取官推' in content):
 			time_now = datetime.datetime.now()
@@ -86,6 +92,40 @@ def onQQMessage(bot, contact, member, content):
 				if(time_now - tweet.created_at < TIME_ONEDAY):
 					time.sleep(1)
 					bot.SendTo(contact, str(tweet.text.encode('utf-8', 'ignore')))
+			return
+
+		if('改修' in content):
+			total_string = ''
+			print('checking for akashi factory list')
+			req = urllib2.Request(KCWIKI_DATA)
+			re = urllib2.urlopen(req)
+			re = re.read()
+			equip_list = json.loads(re)
+			today_week = datetime.datetime.now() + datetime.timedelta(hours = 14)
+			today_week = (today_week.weekday() + 1) % 7
+
+			for equip in equip_list:
+				list_of_secretary = []
+				improvements = equip[u'improvement']
+				#note: one equip can have different combination of secretary and weekdays,
+				#also different improvement paths
+				for current_improvement in improvements:
+					current_requirements = current_improvement[u'req']
+					for requirement in current_requirements:
+						days = requirement[u'day']
+						if(days[today_week]):
+							#add secretaries to the list
+							list_of_secretary.extend(requirement[u'secretary'])
+
+				if(len(list_of_secretary) > 0):
+					info = '装备名称： '.encode('utf-8') + equip['name'] + ' 秘书舰： '.encode('utf-8')
+					for secretary in list_of_secretary:
+						info = info + secretary + ' '
+
+					total_string = total_string + ';' + info
+					
+			bot.SendTo(contact, total_string)
+			return
 					
     #testgroup '209127315' target 337545621
 	if (contact.qq == GROUP_NUMBER and '@ME' in content): #info mode
@@ -168,6 +208,7 @@ def onQQMessage(bot, contact, member, content):
 		#if no keywords matched, turn to tuling123 api
 		#the response categories: 100000 = text, 200000 = url, 302000 = news(return type is perhaps a list)
 		if('改修' in content):
+			total_string = ''
 			print('checking for akashi factory list')
 			req = urllib2.Request(KCWIKI_DATA)
 			re = urllib2.urlopen(req)
@@ -194,8 +235,9 @@ def onQQMessage(bot, contact, member, content):
 					for secretary in list_of_secretary:
 						info = info + secretary + ' '
 
-					bot.SendTo(contact, info)
-			
+					total_string = total_string + ';' + info
+
+			bot.SendTo(contact, total_string)
 			return
 
 
